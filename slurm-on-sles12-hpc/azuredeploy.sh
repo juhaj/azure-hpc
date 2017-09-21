@@ -74,13 +74,17 @@ add_sdk_repo()
 #
 install_pkgs()
 {
-    pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc6 gcc-c++ gcc6-c++ make nfs-client rpcbind mdadm"
+    pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc6 gcc-c++ gcc6-c++ git lsb make mdadm nfs-client rpcbind"
 
     if is_master; then
         pkgs="$pkgs nfs-kernel-server"
     fi
 
     zypper -n install $pkgs
+
+    # also install IMPI; it will be found in
+    rpm -i /opt/intelMPI/intel_mpi_packages/{intel-mpi-intel64-5.0.3p-048.x86_64.rpm,intel-mpi-rt-intel64-5.0.3p-048.x86_64.rpm}
+    
 }
 
 # Partitions all data disks attached to the VM and creates
