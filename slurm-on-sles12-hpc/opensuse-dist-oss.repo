@@ -2,4 +2,4 @@
 name=OpenSLES-dist-oss
 enabled=1
 autorefresh=0
-baseurl=http://download.opensuse.org/distribution/leap/43.2/repo/oss/
+baseurl=http://download.opensuse.org/distribution/leap/42.3/repo/oss/
