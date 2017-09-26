@@ -70,21 +70,36 @@ add_sdk_repo()
     zypper -n search nfs > /dev/null 2>&1
 }
 
+# Add OpenSUSE repos for easier access to things like gcc7 and python3
+add_opensuse_repos()
+{
+    repoFiles="opensuse-dist-non-oss.repo opensuse-dist-oss.repo opensuse-update.repo"
+    for repoFile in ${repoFiles}
+    do
+        wget ${TEMPLATE_BASE_URL}/${repoFile} && \
+            cp ${repoFile} /etc/zypp/repos.d/
+    done && \
+        zypper --gpg-auto-import-keys refresh
+}
+
 # Installs all required packages.
 #
 install_pkgs()
 {
     pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc6 gcc-c++ gcc6-c++ git lsb make mdadm nfs-client rpcbind"
-
+    
     if is_master; then
         pkgs="$pkgs nfs-kernel-server"
     fi
-
-    zypper -n install $pkgs
-
-    # also install IMPI; it will be found in
-    rpm -i /opt/intelMPI/intel_mpi_packages/{intel-mpi-intel64-5.0.3p-048.x86_64.rpm,intel-mpi-rt-intel64-5.0.3p-048.x86_64.rpm}
     
+    zypper -n install $pkgs
+    
+    # also install IMPI; it will be found in
+    rpm -i /opt/intelMPI/intel_mpi_packages/*.rpm
+    # OR: {intel-mpi-intel64-5.0.3p-048.x86_64.rpm,intel-mpi-rt-intel64-5.0.3p-048.x86_64}.rpm
+
+    # Install the rest we want
+    zypper install --no-confirm --force --force-resolution python3-virtualenv python3-pip gcc7 gcc7-c++ make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-scipy schedtool swig
 }
 
 # Partitions all data disks attached to the VM and creates
@@ -288,12 +303,19 @@ setup_env()
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
 }
 
+# setup software needed for the Research Programming course
+setup_hpc_software()
+{
+    zypper -n install python3-pip 
+
 set -x
 exec &> /root/install.log
 echo "Starting"
 date --iso-8601=seconds
 add_sdk_repo
 echo "DEBUG: add_sdk_repo done"
+add_opensuse_repos
+echo "DEBUG: add_opensuse_repos done"
 install_pkgs
 echo "DEBUG: install_pkgs done"
 setup_shares
@@ -305,4 +327,6 @@ echo "DEBUG: install_munge done"
 install_slurm
 echo "DEBUG: install_slurm done"
 setup_env
+echo "DEBUG: install_slurm done"
+setup_hpc_software
 echo "DEBUG: all done"
