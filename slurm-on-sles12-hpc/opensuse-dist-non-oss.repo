@@ -1,0 +1,5 @@
+[opensles-dist-non-oss]
+name=OpenSLES-dist-non-oss
+enabled=1
+autorefresh=0
+baseurl=http://download.opensuse.org/distribution/leap/42.3/repo/non-oss/

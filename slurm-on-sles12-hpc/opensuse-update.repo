@@ -1,0 +1,5 @@
+[opensles-update]
+name=OpenSLES-update
+enabled=1
+autorefresh=0
+baseurl=http://download.opensuse.org/update/leap/42.3/oss/

@@ -1,0 +1,5 @@
+[opensles-dist-oss]
+name=OpenSLES-dist-oss
+enabled=1
+autorefresh=0
+baseurl=http://download.opensuse.org/distribution/leap/43.2/repo/oss/
