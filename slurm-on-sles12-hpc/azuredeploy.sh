@@ -304,7 +304,7 @@ setup_env()
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution python3-virtualenv python3-pip gcc7 gcc7-c++ make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-scipy schedtool swig
+    zypper install --no-confirm --force --force-resolution  emacs gcc7 gcc7-c++ make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
 }
 
 
