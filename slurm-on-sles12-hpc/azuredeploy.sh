@@ -92,14 +92,12 @@ install_pkgs()
         pkgs="$pkgs nfs-kernel-server"
     fi
     
-    zypper -n install $pkgs
+    zypper -n install  --no-confirm --force --force-resolution $pkgs
     
     # also install IMPI; it will be found in
     rpm -i /opt/intelMPI/intel_mpi_packages/*.rpm
     # OR: {intel-mpi-intel64-5.0.3p-048.x86_64.rpm,intel-mpi-rt-intel64-5.0.3p-048.x86_64}.rpm
 
-    # Install the rest we want
-    zypper install --no-confirm --force --force-resolution python3-virtualenv python3-pip gcc7 gcc7-c++ make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-scipy schedtool swig
 }
 
 # Partitions all data disks attached to the VM and creates
