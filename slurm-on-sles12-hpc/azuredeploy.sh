@@ -86,7 +86,7 @@ add_opensuse_repos()
 #
 install_pkgs()
 {
-    pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc6 gcc-c++ gcc6-c++ git lsb make mdadm nfs-client rpcbind"
+    pkgs="libbz2-1 libz1 openssl libopenssl-devel git lsb make mdadm nfs-client rpcbind"
     
     if is_master; then
         pkgs="$pkgs nfs-kernel-server"
@@ -299,12 +299,15 @@ setup_env()
 	echo "export I_MPI_FABRICS=shm:dapl" >> /etc/profile.d/hpc.sh
 	echo "export I_MPI_DAPL_PROVIDER=ofa-v2-ib0" >> /etc/profile.d/hpc.sh
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
+        echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
 }
 
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution  emacs gcc7 gcc7-c++ make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
+    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
+    ln -s /usr/bin/gcc-7 /usr/bin/gcc
+    ln -s /usr/bin/gfortran-7 /usr/bin/gfortran
 }
 
 
