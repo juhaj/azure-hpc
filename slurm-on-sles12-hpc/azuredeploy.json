@@ -123,7 +123,7 @@
   "variables": {
     "imagePublisher": "SUSE",
     "imageOffer": "SLES-HPC",
-    "slesOSVersion": "12-SP3",
+    "slesOSVersion": "12-SP1",
     "newStorageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
     "vmStorageAccountContainerName": "vhd",
     "OSDiskName": "osdisk",
