@@ -11,6 +11,9 @@
     "adminPassword": {
       "value": ""
     },
+    "adminSSHKey": {
+      "value": ""
+    },
     "hpcUserName": {
       "value": "hpc"
     },

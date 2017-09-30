@@ -21,6 +21,12 @@
         "description": "Admin password. Pick a complex password with uppercase letters, lowercase letters, digits, and symbols. The password should not be longer than 16. Otherwise you'll get a BadRequest error."
       }
     },
+    "adminSSHKey": {
+      "type": "string",
+      "metadata": {
+        "description": "SSH public key for admin."
+      }
+    },
     "hpcUserName": {
       "type": "string",
       "defaultValue": "hpc",
@@ -240,11 +246,22 @@
         "hardwareProfile": {
           "vmSize": "[parameters('headNodeSize')]"
         },
-        "osProfile": {
-          "computerName": "[variables('masterVMName')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
+          "osProfile": {
+              "computerName": "[variables('masterVMName')]",
+              "adminUsername": "[parameters('adminUsername')]",
+              "adminPassword": "[parameters('adminPassword')]",
+              "linuxConfiguration": {
+                  "disablePasswordAuthentication": true,
+                  "ssh": {
+                      "publicKeys": [
+                          {
+                              "path": "/home/juhaj/.ssh/authorized_keys",
+                              "keyData": "[parameters('adminSSHKey')]"
+                          }
+                      ]
+                  }
+              }
+          },
         "storageProfile": {
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
@@ -523,11 +540,12 @@
         "hardwareProfile": {
           "vmSize": "[parameters('workerNodeSize')]"
         },
-        "osProfile": {
-          "computerName": "[concat(variables('workerVMName'), copyindex())]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
+          "osProfile": {
+              "computerName": "[concat(variables('workerVMName'), copyindex())]",
+              "adminUsername": "[parameters('adminUsername')]",
+              "adminPassword": "[parameters('adminPassword')]",
+              "adminSSHKey": "[parameters('adminSSHKey')]"
+          },
         "storageProfile": {
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
