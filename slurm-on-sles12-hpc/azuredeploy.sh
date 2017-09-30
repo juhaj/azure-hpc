@@ -325,11 +325,12 @@ setup_shares
 echo "DEBUG: setup_shares done"
 setup_hpc_user
 echo "DEBUG: setup_hpc_user done"
+setup_env
+echo "DEBUG: install_slurm done"
+setup_hpc_software
+echo "DEBUG: hpc_software done"
 install_munge
 echo "DEBUG: install_munge done"
 install_slurm
 echo "DEBUG: install_slurm done"
-setup_env
-echo "DEBUG: install_slurm done"
-setup_hpc_software
 echo "DEBUG: all done"
