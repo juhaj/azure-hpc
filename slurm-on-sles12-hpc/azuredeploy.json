@@ -27,6 +27,10 @@
         "description": "SSH public key for admin."
       }
     },
+      "availabilitySets_infiniband_name": {
+          "defaultValue": "infiniband",
+          "type": "String"
+      },
     "hpcUserName": {
       "type": "string",
       "defaultValue": "hpc",
@@ -164,6 +168,29 @@
     "storageAccountType": "Standard_LRS"
   },
   "resources": [
+      {
+          "comments": "Generalized from resource: '/subscriptions/b2b9b009-c972-437b-b5a8-b49507dc5197/resourceGroups/centos73slurmtest/providers/Microsoft.Compute/availabilitySets/infiniband'.",
+          "type": "Microsoft.Compute/availabilitySets",
+          "sku": {
+              "name": "Aligned"
+          },
+          "name": "[parameters('availabilitySets_infiniband_name')]",
+          "apiVersion": "2016-04-30-preview",
+          "location": "westeurope",
+          "scale": null,
+          "properties": {
+              "platformUpdateDomainCount": 5,
+              "platformFaultDomainCount": 1,
+              "virtualMachines": [
+                  {
+                      "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_centos73slurmtest_name'))]"
+                  }
+              ]
+          },
+          "dependsOn": [
+              "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_centos73slurmtest_name'))]"
+          ]
+      },
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('newStorageAccountName')]",
@@ -243,6 +270,9 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_infiniband_name'))]"
+                },
         "hardwareProfile": {
           "vmSize": "[parameters('headNodeSize')]"
         },
@@ -537,6 +567,9 @@
         "count": "[parameters('workerNodeCount')]"
       },
       "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_infiniband_name'))]"
+                },
         "hardwareProfile": {
           "vmSize": "[parameters('workerNodeSize')]"
         },
@@ -544,7 +577,17 @@
               "computerName": "[concat(variables('workerVMName'), copyindex())]",
               "adminUsername": "[parameters('adminUsername')]",
               "adminPassword": "[parameters('adminPassword')]",
-              "adminSSHKey": "[parameters('adminSSHKey')]"
+              "linuxConfiguration": {
+                  "disablePasswordAuthentication": true,
+                  "ssh": {
+                      "publicKeys": [
+                          {
+                              "path": "/home/juhaj/.ssh/authorized_keys",
+                              "keyData": "[parameters('adminSSHKey')]"
+                          }
+                      ]
+                  }
+              }
           },
         "storageProfile": {
           "imageReference": {
