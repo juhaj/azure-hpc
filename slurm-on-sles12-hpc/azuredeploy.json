@@ -170,9 +170,6 @@
   "resources": [
       {
           "type": "Microsoft.Compute/availabilitySets",
-          "sku": {
-              "name": "Aligned"
-          },
           "name": "[parameters('availabilitySets_infiniband_name')]",
           "apiVersion": "2016-04-30-preview",
           "location": "westeurope",
