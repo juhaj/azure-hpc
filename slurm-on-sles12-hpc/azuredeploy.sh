@@ -41,6 +41,10 @@ HPC_USER=$4
 HPC_UID=7007
 HPC_GROUP=users
 
+# HPC software stuff
+# Prep a suitable directory
+SOFTWARE_BUILD_TREE=/software/src
+SOFTWARE_INSTALL_TREE=/software
 
 # Returns 0 if this node is the master node.
 #
@@ -303,12 +307,42 @@ setup_env()
         echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
 }
 
+install_hdf5()
+{
+    # get HDF5 v1.8.15
+    rm -rf hdf5-1.10.1 && \
+        if ! [ -f hdf5-1.10.1.tar.bz2 ]
+        then
+            wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.bz2
+        fi && \
+        tar jxf hdf5-1.10.1.tar.bz2 && \
+        cd hdf5-1.10.1 && \
+        ./configure --prefix=${SOFTWARE_INSTALL_TREE}/hdf5 --enable-parallel --enable-shared && \
+        make && \
+        make install && \
+        echo DEBUG: hdf5 built successfully && return 0 || \
+            echo DEBUG: falied to build hdf5 && return 1
+}
+
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hdf5 hwloc libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-h5py python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
+    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel hwloc-lstopo libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
     ln -s /usr/bin/gcc-7 /usr/bin/gcc
+    ln -s /usr/bin/g++-7 /usr/bin/g++
     ln -s /usr/bin/gfortran-7 /usr/bin/gfortran
+
+    # create the out-of-rpm software installation tree
+    mkdir -p ${SOFTWARE_BUILD_TREE}
+
+    # Go to our build tree dir
+    cd ${SOFTWARE_BUILD_TREE}
+
+    # install hdf5
+    install_hdf5 || return 2 && \
+            echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh 
+
+    
 }
 
 
@@ -339,3 +373,5 @@ echo "DEBUG: all done"
 # scalapack, petsc … all that shit + non-interactive MPI for Cardiff
 # glusterfs, parallel hdf5
 # singularity?
+# systemctl units for munge and slurm
+# automatic slurm and munge start, plus worker reboot at the end of deployment (because IB does not always come up)
