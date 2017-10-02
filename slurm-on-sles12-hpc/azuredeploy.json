@@ -169,7 +169,6 @@
   },
   "resources": [
       {
-          "comments": "Generalized from resource: '/subscriptions/b2b9b009-c972-437b-b5a8-b49507dc5197/resourceGroups/centos73slurmtest/providers/Microsoft.Compute/availabilitySets/infiniband'.",
           "type": "Microsoft.Compute/availabilitySets",
           "sku": {
               "name": "Aligned"
@@ -183,12 +182,12 @@
               "platformFaultDomainCount": 1,
               "virtualMachines": [
                   {
-                      "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_centos73slurmtest_name'))]"
+                      "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_master_name'))]"
                   }
               ]
           },
           "dependsOn": [
-              "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_centos73slurmtest_name'))]"
+              "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_master_name'))]"
           ]
       },
     {

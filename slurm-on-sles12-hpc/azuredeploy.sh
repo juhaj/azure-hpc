@@ -334,3 +334,4 @@ echo "DEBUG: install_munge done"
 install_slurm
 echo "DEBUG: install_slurm done"
 echo "DEBUG: all done"
+# add users, what else? persistent disc space? first lecture intro to ssh, log to azure, get it working on damtp
