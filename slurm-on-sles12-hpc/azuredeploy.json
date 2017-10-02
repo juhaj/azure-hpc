@@ -179,16 +179,8 @@
           "scale": null,
           "properties": {
               "platformUpdateDomainCount": 5,
-              "platformFaultDomainCount": 1,
-              "virtualMachines": [
-                  {
-                      "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_master_name'))]"
-                  }
-              ]
-          },
-          "dependsOn": [
-              "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_master_name'))]"
-          ]
+              "platformFaultDomainCount": 1
+          }
       },
     {
       "type": "Microsoft.Storage/storageAccounts",
