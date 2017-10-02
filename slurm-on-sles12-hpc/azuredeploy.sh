@@ -299,6 +299,7 @@ setup_env()
 	echo "export I_MPI_FABRICS=shm:dapl" >> /etc/profile.d/hpc.sh
 	echo "export I_MPI_DAPL_PROVIDER=ofa-v2-ib0" >> /etc/profile.d/hpc.sh
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
+        echo "export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so" >> /etc/profile.d/hpc.sh
         echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
 }
 
@@ -326,7 +327,7 @@ echo "DEBUG: setup_shares done"
 setup_hpc_user
 echo "DEBUG: setup_hpc_user done"
 setup_env
-echo "DEBUG: install_slurm done"
+echo "DEBUG: setup_env done"
 setup_hpc_software
 echo "DEBUG: hpc_software done"
 install_munge
@@ -335,3 +336,6 @@ install_slurm
 echo "DEBUG: install_slurm done"
 echo "DEBUG: all done"
 # add users, what else? persistent disc space? first lecture intro to ssh, log to azure, get it working on damtp
+# scalapack, petsc … all that shit + non-interactive MPI for Cardiff
+# glusterfs, parallel hdf5
+# singularity?
