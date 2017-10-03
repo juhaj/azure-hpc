@@ -379,9 +379,9 @@ install_petsc()
 setup_hpc_software()
 {
     zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel hwloc-lstopo libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv schedtool swig
-    ln -s /usr/local/bin/gcc-7 /usr/bin/gcc
-    ln -s /usr/local/bin/g++-7 /usr/bin/g++
-    ln -s /usr/local/bin/gfortran-7 /usr/bin/gfortran
+    ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+    ln -s /usr/bin/g++-7 /usr/local/bin/g++
+    ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
 
     # create the out-of-rpm software installation tree
     mkdir -p ${SOFTWARE_BUILD_TREE}
