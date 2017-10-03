@@ -309,6 +309,8 @@ setup_env()
 
 install_hdf5()
 {
+    # Go to our build tree dir
+    cd ${SOFTWARE_BUILD_TREE}
     # get HDF5 v1.8.15
     rm -rf hdf5-1.10.1 && \
         if ! [ -f hdf5-1.10.1.tar.bz2 ]
@@ -321,26 +323,77 @@ install_hdf5()
         make && \
         make install && \
         echo DEBUG: hdf5 built successfully && return 0 || \
-            echo DEBUG: falied to build hdf5 && return 1
+            echo DEBUG: failed to build hdf5 && return 1
+}
+
+install_petsc()
+{
+    # Go to our build tree dir
+    cd ${SOFTWARE_BUILD_TREE}
+    # get PETSc v3.7.5
+    git clone -b v3.7.5 https://bitbucket.org/petsc/petsc petsc
+    
+    # Build it
+    cd petsc && \
+        ./configure --prefix=${SOFTWARE_INSTALL_TREE}/petsc --with-shared-libraries --with-debugging=0 \
+                    --useThreads=0 --with-clanguage=C++ --with-cxx-dialect=C++11 --with-c-support \
+                    --with-fortran-interfaces=1 \
+                    --with-mpi=1 --with-mpi-shared=1 \
+                    --with-blas-lapack-include=/usr/include/openblas --with-blas-lib=/usr/lib64/libopenblas_openmp.so --with-lapack-lib=/usr/lib64/libopenblas_openmp.so \
+                    --with-scalapack=0 \
+                    --with-suitesparse=0 \
+                    --with-spooles=0 \
+                    --with-hypre=0 \
+                    --with-ptscotch=0 \
+                    --with-fftw=0 \
+                    --with-hdf5=1 --with-hdf5-dir=${SOFTWARE_INSTALL_TREE}/hdf5 \
+                    --with-memalign=64 --with-log=1 \
+                    --with-valgrind=0 \
+                    --with-mumps=0 \
+                    --with-boost=0 \
+                    --with-elemental=0 \
+                    --with-netcdf=0 \
+                    --with-triangle=0 \
+                    --with-numpy=1 \
+                    --with-hwloc=1 \
+                    --with-parmetis=0 \
+                    --with-metis=0 \
+                    --with-tetgen=0 \
+                    --with-scalar-type=real --with-pic=1 --with-gnu-compilers=1 --with-openmp=1 \
+                    --with-64-bit-indices \
+                    --download-sprng=yes \
+                    --CXX_LINKER_FLAGS="-Wl,--no-as-needed" \
+                    --COPTFLAGS="-Ofast -g" \
+                    --FOPTFLAGS="-Ofast -g" \
+                    --CXXOPTFLAGS="-Ofast -g" && \
+        make PETSC_DIR=${SOFTWARE_BUILD_TREE}/petsc all && make PETSC_DIR=${SOFTWARE_BUILD_TREE}/petsc install && \
+        export PETSC_DIR=${SOFTWARE_INSTALL_TREE}/petsc && \
+        echo "Now installing mpi4py and petsc4py" && \
+        pip3 install --no-binary :all: mpi4py && \
+        pip3 install --no-binary :all: --no-deps petsc4py==3.7.0 && \
+        echo DEBUG: petsc, mpi4py, petsc4py built successfully && return 0 || \
+            echo DEBUG: failed to build petsc, mpi4py, petsc4py && return 1
 }
 
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel hwloc-lstopo libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-matplotlib python3-numpy python3-pip python3-scipy python3-virtualenv schedtool swig
-    ln -s /usr/bin/gcc-7 /usr/bin/gcc
-    ln -s /usr/bin/g++-7 /usr/bin/g++
-    ln -s /usr/bin/gfortran-7 /usr/bin/gfortran
+    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel hwloc-lstopo libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv schedtool swig
+    ln -s /usr/local/bin/gcc-7 /usr/bin/gcc
+    ln -s /usr/local/bin/g++-7 /usr/bin/g++
+    ln -s /usr/local/bin/gfortran-7 /usr/bin/gfortran
 
     # create the out-of-rpm software installation tree
     mkdir -p ${SOFTWARE_BUILD_TREE}
 
-    # Go to our build tree dir
-    cd ${SOFTWARE_BUILD_TREE}
-
     # install hdf5
     install_hdf5 || return 2 && \
-            echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh 
+            echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
+            export HDF5_HOME=/software/hdf5 && \
+            install_petsc || return 3 && \
+                    echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
+                    export PETSC_DIR=/software/petsc
+                    pip3... ipython... jupyter...
 
     
 }
@@ -362,7 +415,7 @@ setup_hpc_user
 echo "DEBUG: setup_hpc_user done"
 setup_env
 echo "DEBUG: setup_env done"
-setup_hpc_software
+###setup_hpc_software
 echo "DEBUG: hpc_software done"
 install_munge
 echo "DEBUG: install_munge done"
