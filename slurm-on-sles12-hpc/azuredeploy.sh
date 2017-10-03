@@ -393,7 +393,7 @@ setup_hpc_software()
             install_petsc || return 3 && \
                     echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
                     export PETSC_DIR=/software/petsc
-                    pip3... ipython... jupyter...
+    #pip3... ipython... jupyter...
 
     
 }
@@ -415,7 +415,7 @@ setup_hpc_user
 echo "DEBUG: setup_hpc_user done"
 setup_env
 echo "DEBUG: setup_env done"
-###setup_hpc_software
+setup_hpc_software
 echo "DEBUG: hpc_software done"
 install_munge
 echo "DEBUG: install_munge done"
