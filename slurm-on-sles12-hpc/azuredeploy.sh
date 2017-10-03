@@ -383,6 +383,13 @@ setup_hpc_software()
     ln -s /usr/bin/g++-7 /usr/local/bin/g++
     ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
 
+    # need to set up the environment for building stuff (with Intel MPI)
+    export I_MPI_FABRICS=shm:dapl
+    export I_MPI_DAPL_PROVIDER=ofa-v2-ib0
+    export I_MPI_DYNAMIC_CONNECTION=0
+    export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
+    source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh
+    
     # create the out-of-rpm software installation tree
     mkdir -p ${SOFTWARE_BUILD_TREE}
 
