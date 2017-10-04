@@ -384,22 +384,25 @@ setup_hpc_software()
     ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
 
     # need to set up the environment for building stuff (with Intel MPI)
-    #source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh
-    #export I_MPI_FABRICS=shm:dapl
-    #export I_MPI_DAPL_PROVIDER=ofa-v2-ib0
-    #export I_MPI_DYNAMIC_CONNECTION=0
-    #export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
+    # Intel's scripts do not work with "set -u" so
+    set +u
+    source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh
+    set -u
+    export I_MPI_FABRICS=shm:dapl
+    export I_MPI_DAPL_PROVIDER=ofa-v2-ib0
+    export I_MPI_DYNAMIC_CONNECTION=0
+    export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
     
     # create the out-of-rpm software installation tree
-    #mkdir -p ${SOFTWARE_BUILD_TREE}
+    mkdir -p ${SOFTWARE_BUILD_TREE}
 
     # install hdf5
-    #install_hdf5 || return 2 && \
-    #        echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
-    #        export HDF5_HOME=/software/hdf5 && \
-    #        install_petsc || return 3 && \
-    #                echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
-    #                export PETSC_DIR=/software/petsc
+    install_hdf5 || return 2 && \
+            echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
+            export HDF5_HOME=/software/hdf5 && \
+            install_petsc || return 3 && \
+                    echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
+                    export PETSC_DIR=/software/petsc
     #pip3... ipython... jupyter...
 
     
