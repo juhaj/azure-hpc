@@ -307,19 +307,19 @@ setup_env()
 {
     # Set unlimited mem lock
     echo "$HPC_USER hard memlock unlimited" >> /etc/security/limits.conf
-	echo "$HPC_USER soft memlock unlimited" >> /etc/security/limits.conf
+    echo "$HPC_USER soft memlock unlimited" >> /etc/security/limits.conf
 
-	# Intel MPI config for IB
+    # Intel MPI config for IB
     echo "# IB Config for MPI" > /etc/profile.d/hpc.sh
-	echo "export I_MPI_FABRICS=shm:dapl" >> /etc/profile.d/hpc.sh
-	echo "export I_MPI_DAPL_PROVIDER=ofa-v2-ib0" >> /etc/profile.d/hpc.sh
-	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
-        echo "export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so" >> /etc/profile.d/hpc.sh
-        echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh
-        echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh
-        # do we need LD_LIBRARY_PATH?
-        echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
-        echo "export PATH=/usr/lib64/gcc/x86_64-suse-linux/7:${HDF5_HOME}/bin:${PATH}" >> /etc/profile.d/hpc.sh
+    echo "export I_MPI_FABRICS=shm:dapl" >> /etc/profile.d/hpc.sh
+    echo "export I_MPI_DAPL_PROVIDER=ofa-v2-ib0" >> /etc/profile.d/hpc.sh
+    echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
+    echo "export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so" >> /etc/profile.d/hpc.sh
+    echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh
+    echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh
+    # do we need LD_LIBRARY_PATH?
+    echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
+    echo 'export PATH=/usr/lib64/gcc/x86_64-suse-linux/7:${HDF5_HOME}/bin:${PATH}' >> /etc/profile.d/hpc.sh
 }
 
 install_hdf5()
