@@ -8,7 +8,7 @@ After=time-sync.target
 [Service]
 Type=forking
 ExecStart=/usr/sbin/slurmd -vvvv
-PIDFile=/var/run/slurmd.pid
+PIDFile=/var/run/slurmd/slurmd.pid
 User=slurm
 Group=slurm
 Restart=on-abort
