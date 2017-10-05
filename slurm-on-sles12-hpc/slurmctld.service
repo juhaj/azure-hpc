@@ -7,7 +7,7 @@ After=time-sync.target
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/slurmctld -vvvv
+ExecStart=/usr/sbin/slurmctld -vvvv -c
 PIDFile=/var/run/slurmctld.pid
 User=slurm
 Group=slurm
