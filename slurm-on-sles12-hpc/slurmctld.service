@@ -1,0 +1,17 @@
+[Unit]
+Description=slurmctl daemon - master side
+Documentation=man:slurmctld(8)
+After=network.target
+After=syslog.target
+After=time-sync.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/slurmctld -vvvv
+PIDFile=/var/run/slurmctld.pid
+User=slurm
+Group=slurm
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

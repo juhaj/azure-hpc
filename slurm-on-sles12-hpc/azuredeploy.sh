@@ -201,7 +201,8 @@ install_munge()
     chown munge:munge /etc/munge/munge.key
     chmod 0400 /etc/munge/munge.key
 
-    /etc/init.d/munge start
+    systemctl enable munge
+    systemctl start munge
 
     cd ..
 }
@@ -252,10 +253,20 @@ install_slurm()
 
     install_slurm_config
 
+    wget ${TEMPLATE_BASE_URL}/slurmd.service
+    wget ${TEMPLATE_BASE_URL}/slurmctld.service
+    wget ${TEMPLATE_BASE_URL}/create_training_users.py
+    
     if is_master; then
-        /usr/sbin/slurmctld -vvvv
+        #/usr/sbin/slurmctld -vvvv
+        mv slurmctld.service /usr/lib/systemd/system/
+        systemctl enable slurmctld
+        systemctl start slurmctld
     else
-        /usr/sbin/slurmd -vvvv
+        #/usr/sbin/slurmd -vvvv
+        mv slurmd.service /usr/lib/systemd/system/
+        systemctl enable slurmd
+        systemctl start slurmd
     fi
 
     cd ..
@@ -304,7 +315,11 @@ setup_env()
 	echo "export I_MPI_DAPL_PROVIDER=ofa-v2-ib0" >> /etc/profile.d/hpc.sh
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
         echo "export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so" >> /etc/profile.d/hpc.sh
+        echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh
+        echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh
+        # do we need LD_LIBRARY_PATH?
         echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
+        echo "export PATH=/usr/lib64/gcc/x86_64-suse-linux/7:${HDF5_HOME}/bin:${PATH}" >> /etc/profile.d/hpc.sh
 }
 
 install_hdf5()
@@ -400,9 +415,11 @@ setup_hpc_software()
     install_hdf5 || return 2 && \
             echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
             export HDF5_HOME=/software/hdf5 && \
+            export PATH=${HDF5_HOME}/bin:${PATH}
             install_petsc || return 3 && \
                     echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
-                    export PETSC_DIR=/software/petsc
+                    export PETSC_DIR=/software/petsc && \
+                    CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
     #pip3... ipython... jupyter...
 
     
