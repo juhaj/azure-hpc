@@ -9,8 +9,7 @@ After=time-sync.target
 Type=forking
 ExecStart=/usr/sbin/slurmd -vvvv
 PIDFile=/var/run/slurmd/slurmd.pid
-User=slurm
-Group=slurm
+User=root
 Restart=on-abort
 
 [Install]
