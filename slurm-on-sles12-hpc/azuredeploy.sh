@@ -249,13 +249,12 @@ install_slurm()
 
     cd slurm-slurm-$SLURM_VERSION
 	
-    ./configure -libdir=/usr/lib64 --prefix=/usr --sysconfdir=/etc/slurm && make && make install
+    ./configure -libdir=/usr/lib64 --prefix=/usr --sysconfdir=/etc/slurm --with-hdf5=no && make && make install
 
     install_slurm_config
 
     wget ${TEMPLATE_BASE_URL}/slurmd.service
     wget ${TEMPLATE_BASE_URL}/slurmctld.service
-    wget ${TEMPLATE_BASE_URL}/create_training_users.py
     
     if is_master; then
         #/usr/sbin/slurmctld -vvvv
@@ -325,7 +324,7 @@ setup_env()
 install_hdf5()
 {
     # Go to our build tree dir
-    cd ${SOFTWARE_BUILD_TREE}
+    pushd ${SOFTWARE_BUILD_TREE}
     # get HDF5 v1.8.15
     rm -rf hdf5-1.10.1 && \
         if ! [ -f hdf5-1.10.1.tar.bz2 ]
@@ -337,14 +336,14 @@ install_hdf5()
         ./configure --prefix=${SOFTWARE_INSTALL_TREE}/hdf5 --enable-parallel --enable-shared && \
         make && \
         make install && \
-        echo DEBUG: hdf5 built successfully && return 0 || \
-            echo DEBUG: failed to build hdf5 && return 1
+        echo DEBUG: hdf5 built successfully && popd && return 0 || \
+            echo DEBUG: failed to build hdf5 && popd && return 1
 }
 
 install_petsc()
 {
     # Go to our build tree dir
-    cd ${SOFTWARE_BUILD_TREE}
+    pushd ${SOFTWARE_BUILD_TREE}
     # get PETSc v3.7.5
     git clone -b v3.7.5 https://bitbucket.org/petsc/petsc petsc
     
@@ -386,8 +385,8 @@ install_petsc()
         echo "Now installing mpi4py and petsc4py" && \
         pip3 install --no-binary :all: mpi4py && \
         pip3 install --no-binary :all: --no-deps petsc4py==3.7.0 && \
-        echo DEBUG: petsc, mpi4py, petsc4py built successfully && return 0 || \
-            echo DEBUG: failed to build petsc, mpi4py, petsc4py && return 1
+        echo DEBUG: petsc, mpi4py, petsc4py built successfully && popd && return 0 || \
+            echo DEBUG: failed to build petsc, mpi4py, petsc4py && popd && return 1
 }
 
 # setup software needed for the Research Programming course
@@ -448,6 +447,8 @@ install_munge
 echo "DEBUG: install_munge done"
 install_slurm
 echo "DEBUG: install_slurm done"
+wget ${TEMPLATE_BASE_URL}/create_training_users.py
+mv create_training_users.py /root/
 echo "DEBUG: all done"
 # add users, what else? persistent disc space? first lecture intro to ssh, log to azure, get it working on damtp
 # scalapack, petsc … all that shit + non-interactive MPI for Cardiff
