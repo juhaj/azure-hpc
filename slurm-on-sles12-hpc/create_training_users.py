@@ -36,7 +36,7 @@ echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
         homedirflag="-m"
     else:
         homedirflag="-M"
-    uid=pwd.getpwnam("hpc").pw_uid+10+num
+    uid=pwd.getpwnam("hpc").pw_uid+1+num
     gname=grp.getgrgid(pwd.getpwnam("hpc").pw_gid).gr_name
     homedir=os.path.join(os.path.split(pwd.getpwnam("hpc").pw_dir)[0],uname)
     subprocess.Popen(["/usr/sbin/useradd", "-c", "Training user {num}".format(num=num),
