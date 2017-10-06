@@ -51,4 +51,4 @@ vwr.destroy()
 vwr2=PETSc.Viewer().createHDF5(FILENAME, mode=PETSc.Viewer.Mode.READ)
 data2.load(vwr2)
 
-print("Are they equal? " + ["No!", "Yes!"][data1.equal(data2)])
+PETSc.Sys.syncPrint("Are they equal? " + ["No!", "Yes!"][data1.equal(data2)])
