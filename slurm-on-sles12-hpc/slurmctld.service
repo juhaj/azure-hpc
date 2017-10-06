@@ -12,6 +12,7 @@ PIDFile=/var/run/slurmctld/slurmctld.pid
 User=slurm
 Group=slurm
 Restart=on-abort
+LimitMEMLOCK=infinity
 
 [Install]
 WantedBy=multi-user.target

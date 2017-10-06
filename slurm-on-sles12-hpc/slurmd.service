@@ -11,6 +11,7 @@ ExecStart=/usr/sbin/slurmd -vvvv
 PIDFile=/var/run/slurmd/slurmd.pid
 User=root
 Restart=on-abort
+LimitMEMLOCK=infinity
 
 [Install]
 WantedBy=multi-user.target
