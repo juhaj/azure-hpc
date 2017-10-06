@@ -43,3 +43,12 @@ data2 = data1.duplicate()
 data2.name = "data"
 initialise(dm, data1)
 
+FILENAME="/share/data/juhaj/test.h5"
+vwr=PETSc.Viewer().createHDF5(FILENAME, mode=PETSc.Viewer.Mode.WRITE)
+data1.view(vwr)
+vwr.destroy()
+
+vwr2=PETSc.Viewer().createHDF5(FILENAME, mode=PETSc.Viewer.Mode.READ)
+data2.load(vwr2)
+
+print("Are they equal? " + ["No!", "Yes!"][data1.equal(data2)])
