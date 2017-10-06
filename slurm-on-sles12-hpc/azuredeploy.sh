@@ -419,9 +419,6 @@ setup_hpc_software()
                     echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
                     export PETSC_DIR=/software/petsc && \
                     CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
-    #pip3... ipython... jupyter...
-
-    
 }
 
 
@@ -451,8 +448,6 @@ wget ${TEMPLATE_BASE_URL}/create_training_users.py
 mv create_training_users.py /root/
 echo "DEBUG: all done"
 # add users, what else? persistent disc space? first lecture intro to ssh, log to azure, get it working on damtp
-# scalapack, petsc … all that shit + non-interactive MPI for Cardiff
-# glusterfs, parallel hdf5
+# glusterfs?
 # singularity?
-# systemctl units for munge and slurm
-# automatic slurm and munge start, plus worker reboot at the end of deployment (because IB does not always come up)
+# worker reboot at the end of deployment (because IB does not always come up)?
