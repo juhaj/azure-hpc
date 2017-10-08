@@ -8,6 +8,8 @@ import grp
 import os
 import posix
 
+BASE_UID=10000
+
 def on_master():
     return posix.uname().nodename.startswith("master")
 
@@ -36,7 +38,7 @@ echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
         homedirflag="-m"
     else:
         homedirflag="-M"
-    uid=pwd.getpwnam("hpc").pw_uid+1+num
+    uid=BASE_UID+num
     gname=grp.getgrgid(pwd.getpwnam("hpc").pw_gid).gr_name
     homedir=os.path.join(os.path.split(pwd.getpwnam("hpc").pw_dir)[0],uname)
     subprocess.Popen(["/usr/sbin/useradd", "-c", "Training user {num}".format(num=num),
@@ -44,8 +46,10 @@ echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
                       uname]).wait()
     newpass = passgen.passgen()
     p=subprocess.Popen(["/usr/bin/passwd", uname], stdin=subprocess.PIPE)
-    p.stdin.write(newpass+"\n")
-    p.stdin.write(newpass+"\n")
+    tmp = newpass+"\n"
+    p.stdin.write(tmp.encode("utf-8"))
+    p.stdin.write(tmp.encode("utf-8"))
+    p.communicate()
     p.wait()
     if (on_master()):
         keyfile=os.path.join(homedir,".ssh","id_rsa")
