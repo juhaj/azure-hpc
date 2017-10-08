@@ -101,7 +101,6 @@ install_pkgs()
     # also install IMPI; it will be found in
     rpm -i /opt/intelMPI/intel_mpi_packages/*.rpm
     # OR: {intel-mpi-intel64-5.0.3p-048.x86_64.rpm,intel-mpi-rt-intel64-5.0.3p-048.x86_64}.rpm
-
 }
 
 # Partitions all data disks attached to the VM and creates
@@ -287,7 +286,7 @@ setup_hpc_user()
         echo "Host *" > $SHARE_HOME/$HPC_USER/.ssh/config
         echo "    StrictHostKeyChecking no" >> $SHARE_HOME/$HPC_USER/.ssh/config
         echo "    UserKnownHostsFile /dev/null" >> $SHARE_HOME/$HPC_USER/.ssh/config
-		echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
+	echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
 
         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/config
@@ -396,6 +395,7 @@ setup_hpc_software()
     ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
     ln -s /usr/bin/g++-7 /usr/local/bin/g++
     ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
+    pip3 install --user passgen
 
     # need to set up the environment for building stuff (with Intel MPI)
     # Intel's scripts do not work with "set -u" so
