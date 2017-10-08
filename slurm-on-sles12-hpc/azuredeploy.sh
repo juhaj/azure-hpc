@@ -422,6 +422,22 @@ setup_hpc_software()
 }
 
 
+setup_my_jupyter()
+{
+    wget ${TEMPLATE_BASE_URL}/my_jupyter
+    mv my_jupyter /usr/local/bin/
+    chmod 755 /usr/local/bin/my_jupyter
+}
+
+
+re_enable_ssh_password_auth()
+{
+    if is_master; then
+        sed --in-place 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+        systemctl restart sshd
+    fi
+}
+
 set -x
 exec &> /root/install.log
 echo "Starting"
@@ -446,6 +462,11 @@ install_slurm
 echo "DEBUG: install_slurm done"
 wget ${TEMPLATE_BASE_URL}/create_training_users.py
 mv create_training_users.py /root/
+echo "DEBUG: wget got training user creation script"
+setup_my_jupyter
+echo "DEBUG: setup_my_jupyter done"
+re_enable_ssh_password_auth
+echo "DEBUG: re_enable_ssh_password_auth done"
 echo "DEBUG: all done"
 # add users, what else? persistent disc space? first lecture intro to ssh, log to azure, get it working on damtp
 # glusterfs?
