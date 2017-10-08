@@ -257,12 +257,12 @@ install_slurm()
     wget ${TEMPLATE_BASE_URL}/slurmctld.service
     
     if is_master; then
-        #/usr/sbin/slurmctld -vvvv
+        echo 'd /var/run/slurmctld 0755 slurm slurm -' > /usr/lib/tmpfiles.d/slurmctld.conf
         mv slurmctld.service /usr/lib/systemd/system/
         systemctl enable slurmctld
         systemctl start slurmctld
     else
-        #/usr/sbin/slurmd -vvvv
+        echo 'd /var/run/slurmd 0755 root root -' > /usr/lib/tmpfiles.d/slurmd.conf
         mv slurmd.service /usr/lib/systemd/system/
         systemctl enable slurmd
         systemctl start slurmd
