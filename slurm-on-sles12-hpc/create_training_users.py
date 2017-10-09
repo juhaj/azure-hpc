@@ -26,9 +26,10 @@ def create_user(uname, num):
     uid=BASE_UID+num
     try:
         pwd.getpwuid(uid)
-    except KeyError:
         newpass=None
-    else:
+    except KeyError:
+        newpass = passgen.passgen()
+    if (newpass is not None):
         if (on_master()):
             homedirflag="-m"
         else:
@@ -38,7 +39,6 @@ def create_user(uname, num):
         subprocess.Popen(["/usr/sbin/useradd", "-c", "Training user {num}".format(num=num),
                           "-g", gname, "-d", homedir, "-s", "/bin/bash", homedirflag, "-u", str(uid),
                           uname]).wait()
-        newpass = passgen.passgen()
         p=subprocess.Popen(["/usr/bin/passwd", uname], stdin=subprocess.PIPE)
         tmp = newpass+"\n"
         p.stdin.write(tmp.encode("utf-8"))
