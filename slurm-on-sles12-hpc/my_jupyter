@@ -14,6 +14,7 @@ if __name__ == '__main__':
     my_name = pwd.getpwuid(my_uid).pw_name
     my_args = ["notebook", "--no-browser", "--ip", "localhost", "--port",
                "{port}".format(port=my_uid),
+               "--ip", "*",
                "--notebook-dir", os.path.join("/share","data", my_name)]
     sys.argv = [sys.argv[0]] + my_args
     sys.exit(main())
