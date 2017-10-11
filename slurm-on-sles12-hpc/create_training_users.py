@@ -53,6 +53,7 @@ def create_user(uname, num):
                 with open(os.path.join(homedir,".ssh","authorized_keys"),"a") as ouf:
                     for line in inf:
                         ouf.write(line)
+            subprocess.Popen('chown '+uname+':'+gname+' '+os.path.join(homedir,".ssh","authorized_keys"), shell=True)
             subprocess.Popen('mkdir /share/data/{uname}; chown {uname}.{gname} /share/data/{uname}'.format(
                 uname=uname, gname=gname), shell=True).wait()
             subprocess.Popen('sudo --user {uname} --login python3 -m bash_kernel.install --user'.format(uname=uname),
@@ -69,6 +70,9 @@ def create_user(uname, num):
                            echo 'c.BaseParallelApplication.cluster_id = "training_cluster_0"'
                                 >> ${HOME}/.ipython/profile_mpi/ipcluster_config.py'''
             subprocess.Popen(["sudo", "--login", "--user", uname, "sh", "-c", longcommand]).wait()
+            with open(os.path.join(homedir,".gitconfig"),"w") as f:
+                f.write("[user]\nname = Training user {uid}\nmmail = {uname}@training_cluster.nonexistent.azure.com\n".format(uid=num,uname=uname))
+
     return newpass
 
 if (__name__ == "__main__"):
