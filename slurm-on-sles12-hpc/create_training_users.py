@@ -71,7 +71,7 @@ def create_user(uname, num):
                                 >> ${HOME}/.ipython/profile_mpi/ipcluster_config.py'''
             subprocess.Popen(["sudo", "--login", "--user", uname, "sh", "-c", longcommand]).wait()
             with open(os.path.join(homedir,".gitconfig"),"w") as f:
-                f.write("[user]\nname = Training user {uid}\nmmail = {uname}@training_cluster.nonexistent.azure.com\n".format(uid=num,uname=uname))
+                f.write("[user]\nname = Training user {uid}\nemail = {uname}@training_cluster.nonexistent.azure.com\n".format(uid=num,uname=uname))
 
     return newpass
 
