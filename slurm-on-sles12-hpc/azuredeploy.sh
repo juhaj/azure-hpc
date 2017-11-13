@@ -448,6 +448,7 @@ re_enable_ssh_password_auth()
 
 set -x
 exec &> /root/install.log
+echo "This is SP3"
 echo "Starting"
 date --iso-8601=seconds
 add_sdk_repo
