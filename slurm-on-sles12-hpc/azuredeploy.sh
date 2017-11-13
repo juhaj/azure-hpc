@@ -375,10 +375,12 @@ install_petsc()
                     --with-scalar-type=real --with-pic=1 --with-gnu-compilers=1 --with-openmp=1 \
                     --with-64-bit-indices \
                     --download-sprng=yes \
-                    --CXX_LINKER_FLAGS="-Wl,--no-as-needed" \
-                    --COPTFLAGS="-Ofast -g" \
-                    --FOPTFLAGS="-Ofast -g" \
-                    --CXXOPTFLAGS="-Ofast -g" && \
+                    --CXX_LINKER_FLAGS="-Wl,--no-as-needed -fPIC" \
+                    --CC_LINKER_FLAGS="-Wl,--no-as-needed -fPIC" \
+                    --LDFLAGS="-fPIC" \
+                    --COPTFLAGS="-O3 -g -fPIC" \
+                    --FOPTFLAGS="-O3 -g -fPIC" \
+                    --CXXOPTFLAGS="-O3 -g -fPIC" && \
         make PETSC_DIR=${SOFTWARE_BUILD_TREE}/petsc all && make PETSC_DIR=${SOFTWARE_BUILD_TREE}/petsc install && \
         export PETSC_DIR=${SOFTWARE_INSTALL_TREE}/petsc && \
         echo "Now installing mpi4py and petsc4py" && \
@@ -391,7 +393,7 @@ install_petsc()
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel hwloc-lstopo libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv schedtool swig
+    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv rsync schedtool swig
     ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
     ln -s /usr/bin/g++-7 /usr/local/bin/g++
     ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
@@ -406,19 +408,25 @@ setup_hpc_software()
     export I_MPI_DAPL_PROVIDER=ofa-v2-ib0
     export I_MPI_DYNAMIC_CONNECTION=0
     export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
-    
-    # create the out-of-rpm software installation tree
-    mkdir -p ${SOFTWARE_BUILD_TREE}
 
-    # install hdf5
-    install_hdf5 || return 2 && \
-            echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
-            export HDF5_HOME=/software/hdf5 && \
-            export PATH=${HDF5_HOME}/bin:${PATH}
-            install_petsc || return 3 && \
-                    echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
-                    export PETSC_DIR=/software/petsc && \
-                    CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
+    if is_master; then
+
+        # create the out-of-rpm software installation tree
+        mkdir -p ${SOFTWARE_BUILD_TREE}
+
+        # install hdf5
+        install_hdf5 || return 2 && \
+                echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
+                export HDF5_HOME=/software/hdf5 && \
+                export PATH=${HDF5_HOME}/bin:${PATH}
+        install_petsc || return 3 && \
+                echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
+                export PETSC_DIR=/software/petsc && \
+                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
+    else
+        # TODO!!! we should rsync /software from master but need to setup pubkey auth first
+        # TODO!!! for now do that as a postinst step
+    fi
 }
 
 
