@@ -426,6 +426,7 @@ setup_hpc_software()
     else
         # TODO!!! we should rsync /software from master but need to setup pubkey auth first
         # TODO!!! for now do that as a postinst step
+	echo "nothing to do for a worker"
     fi
 }
 
