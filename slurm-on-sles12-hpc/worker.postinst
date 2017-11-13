@@ -1,0 +1,28 @@
+#!/bin/bash
+
+S=$1
+E=$2
+
+# enable pubkey from admin user to root@worker*
+for ((i=$S;$i<$E;i++))
+do
+  ssh worker$i 'sudo rsync -va '${HOME}'/.ssh/ /root/.ssh/ ; sudo chown --recur root.root /root/.ssh'
+done
+
+# copy /software to workers
+for ((i=$S;$i<$E;i++))
+do
+  sudo sh -c 'export SSH_AUTH_SOCK='"$(echo $SSH_AUTH_SOCK)"'; rsync -va /software/ worker'$i':/software/'
+done
+
+# install mpi4py and petsc4py on workers
+for ((i=$S;$i<$E;i++))
+do
+  ssh root@worker$i 'pip3 install --no-binary :all: mpi4py && pip3 install --no-binary :all: --no-deps petsc4py==3.7.0'
+done
+
+# install jupyter etc
+for ((i=$S;$i<$E;i++))
+do
+  ssh root@worker$i sh -c 'CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets'
+done
