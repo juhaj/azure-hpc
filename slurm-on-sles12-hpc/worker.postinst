@@ -12,6 +12,7 @@ done
 # copy /software to workers
 for ((i=$S;$i<$E;i++))
 do
+    # TODO!!! Make this an NFS mount?
   sudo sh -c 'export SSH_AUTH_SOCK='"$(echo $SSH_AUTH_SOCK)"'; rsync -va /software/ worker'$i':/software/'
 done
 
