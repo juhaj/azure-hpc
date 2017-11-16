@@ -394,13 +394,35 @@ install_petsc()
             echo DEBUG: failed to build petsc, mpi4py, petsc4py && popd && return 1
 }
 
+broken_software_compiler_name_fix()
+{
+    # some pieces of software insist on using gcc, g++, gfortran without -numbers, so let's give them symlinks
+    ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+    ln -s /usr/bin/g++-7 /usr/local/bin/g++
+    ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
+}
+
+fix_broken_glibc()
+{
+    wget ${TEMPLATE_BASE_URL}/rpms/glibc-devel-2.22-61.3.1.x86_64.rpm
+    wget ${TEMPLATE_BASE_URL}/rpms/glibc-2.22-61.3.1.x86_64.rpm
+    rpm -i glibc-devel-2.22-61.3.1.x86_64.rpm glibc-2.22-61.3.1.x86_64.rpm
+    cd /usr/lib64
+    ln -s ../lib/locale .
+}
+
+install_workarounds_for_broken_stuff() {
+    broken_software_compiler_name_fix
+    fix_broken_glibc
+}
+
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
     zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv rsync schedtool swig
-    ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
-    ln -s /usr/bin/g++-7 /usr/local/bin/g++
-    ln -s /usr/bin/gfortran-7 /usr/local/bin/gfortran
+    # unfortunately not everything works out of the box on SLES12SP3
+    install_workarounds_for_broken_stuff
+    # we also need passgen when we create users, so add that
     pip3 install --user passgen
 
     # need to set up the environment for building stuff (with Intel MPI)
