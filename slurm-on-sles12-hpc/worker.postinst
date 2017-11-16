@@ -19,11 +19,11 @@ done
 # install mpi4py and petsc4py on workers
 for ((i=$S;$i<$E;i++))
 do
-  ssh root@worker$i 'pip3 install --no-binary :all: mpi4py && pip3 install --no-binary :all: --no-deps petsc4py==3.7.0'
+  ssh root@worker$i 'pip3 install --exists-action w --quiet --no-binary :all: mpi4py && pip3 install --exists-action w --quiet --no-binary :all: --no-deps petsc4py==3.7.0' &
 done
 
 # install jupyter etc
 for ((i=$S;$i<$E;i++))
 do
-  ssh root@worker$i sh -c 'CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets'
+  ssh root@worker$i sh -c 'CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install  --exists-action w --quiet --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets' &
 done
