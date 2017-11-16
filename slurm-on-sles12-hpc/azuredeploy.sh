@@ -148,18 +148,22 @@ setup_shares()
 {
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_DATA
+    mkdir -p ${SOFTWARE_INSTALL_TREE}
 
     if is_master; then
-	    setup_data_disks $SHARE_DATA
+	setup_data_disks $SHARE_DATA
         echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
         echo "$SHARE_DATA    *(rw,async)" >> /etc/exports
+        echo "${SOFTWARE_INSTALL_TREE}                *(rw,async)" >> /etc/exports
         systemctl enable nfsserver && systemctl start nfsserver
     else
         echo "master:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
         echo "master:$SHARE_DATA $SHARE_DATA    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+        echo "master:${SOFTWARE_INSTALL_TREE} ${SOFTWARE_INSTALL_TREE}    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
         mount -a
         mount | grep "^master:$SHARE_HOME"
         mount | grep "^master:$SHARE_DATA"
+        mount | grep "^master:${SOFTWARE_INSTALL_TREE}"
     fi
 }
 
