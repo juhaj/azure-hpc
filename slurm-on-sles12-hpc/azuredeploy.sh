@@ -442,18 +442,20 @@ setup_hpc_software()
 
         # install hdf5
         install_hdf5 || return 2 && \
-                echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
                 export HDF5_HOME=/software/hdf5 && \
                 export PATH=${HDF5_HOME}/bin:${PATH}
-        install_petsc || return 3 && \
-                echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
-                export PETSC_DIR=/software/petsc && \
-                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
+        install_petsc || return 3                
     else
         # TODO!!! we should rsync /software from master but need to setup pubkey auth first
         # TODO!!! for now do that as a postinst step
 	echo "nothing to do for a worker"
     fi
+    echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh && \
+        export HDF5_HOME=/software/hdf5 && \
+        export PATH=${HDF5_HOME}/bin:${PATH} && \
+        echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
+        export PETSC_DIR=/software/petsc && \
+        CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
 }
 
 
