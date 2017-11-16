@@ -406,7 +406,7 @@ fix_broken_glibc()
 {
     wget ${TEMPLATE_BASE_URL}/rpms/glibc-devel-2.22-61.3.1.x86_64.rpm
     wget ${TEMPLATE_BASE_URL}/rpms/glibc-2.22-61.3.1.x86_64.rpm
-    rpm --replace-files -U glibc-devel-2.22-61.3.1.x86_64.rpm glibc-2.22-61.3.1.x86_64.rpm
+    rpm --replacefiles -U glibc-devel-2.22-61.3.1.x86_64.rpm glibc-2.22-61.3.1.x86_64.rpm
     cd /usr/lib64
     ln -s ../lib/locale .
 }
