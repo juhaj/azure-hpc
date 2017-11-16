@@ -27,3 +27,5 @@ for ((i=$S;$i<$E;i++))
 do
   ssh root@worker$i sh -c 'CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install  --exists-action=w --quiet --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets' &
 done
+
+wait
