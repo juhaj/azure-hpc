@@ -22,7 +22,7 @@ BASE_UID=10000
 def on_master():
     return posix.uname().nodename.startswith("master")
 
-def init_jupyter(uname, gname, homedir, num)):
+def init_jupyter(uname, gname, homedir, num):
     subprocess.Popen('chown '+uname+':'+gname+' '+os.path.join(homedir,".ssh","authorized_keys"), shell=True)
     subprocess.Popen('mkdir /share/data/{uname}; chown {uname}.{gname} /share/data/{uname}'.format(
         uname=uname, gname=gname), shell=True).wait()
