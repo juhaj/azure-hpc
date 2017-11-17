@@ -4,7 +4,7 @@ S=$1
 E=$2
 
 # gather ssh keys from workers to /etc/ssh/ssh_known_hosts so we avoid lots of questions now and users avoid them later
-for ((i=$S;$i<$E;i++)) ; do echo -n worker$i' '; done|ssh-keyscan -f - > /etc/ssh/ssh_known_hosts
+for ((i=$S;$i<$E;i++)) ; do echo worker$i' '; done|ssh-keyscan -f - | sudo tee /etc/ssh/ssh_known_hosts
 
 # enable pubkey from admin user to root@worker*
 for ((i=$S;$i<$E;i++))
