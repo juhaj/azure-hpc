@@ -3,17 +3,13 @@
 S=$1
 E=$2
 
+# gather ssh keys from workers to /etc/ssh/ssh_known_hosts so we avoid lots of questions now and users avoid them later
+for ((i=$S;$i<$E;i++)) ; do echo -n worker$i' '; done|ssh-keyscan -f - > /etc/ssh/ssh_known_hosts
+
 # enable pubkey from admin user to root@worker*
 for ((i=$S;$i<$E;i++))
 do
   ssh worker$i 'sudo rsync -va '${HOME}'/.ssh/ /root/.ssh/ ; sudo chown --recur root.root /root/.ssh'
-done
-
-# copy /software to workers
-for ((i=$S;$i<$E;i++))
-do
-    # TODO!!! Make this an NFS mount?
-  sudo sh -c 'export SSH_AUTH_SOCK='"$(echo $SSH_AUTH_SOCK)"'; rsync -va /software/ worker'$i':/software/'
 done
 
 # install mpi4py and petsc4py on workers
