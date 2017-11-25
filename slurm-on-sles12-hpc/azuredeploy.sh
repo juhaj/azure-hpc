@@ -318,6 +318,7 @@ setup_env()
     echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
     echo "export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so" >> /etc/profile.d/hpc.sh
     echo "export HDF5_HOME=/software/hdf5" >> /etc/profile.d/hpc.sh
+    echo "export HDF5_DIR=/software/hdf5" >> /etc/profile.d/hpc.sh
     echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh
     # do we need LD_LIBRARY_PATH?
     echo "source /opt/intel/impi/5.0.3.048/bin64/mpivars.sh" >> /etc/profile.d/hpc.sh
@@ -339,7 +340,7 @@ install_hdf5()
         ./configure --prefix=${SOFTWARE_INSTALL_TREE}/hdf5 --enable-parallel --enable-shared && \
         make && \
         make install && \
-        CC="mpicc" HDF5_MPI="ON"  pip install --no-binary=h5py h5py && \
+        CC="mpicc" HDF5_MPI="ON" HDF5_DIR=/software/hdf5 pip install --no-binary=h5py h5py && \
         echo DEBUG: hdf5 built successfully && popd && return 0 || \
             echo DEBUG: failed to build hdf5 && popd && return 1
 }
