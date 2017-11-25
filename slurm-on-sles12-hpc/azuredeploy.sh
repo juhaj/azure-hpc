@@ -339,6 +339,7 @@ install_hdf5()
         ./configure --prefix=${SOFTWARE_INSTALL_TREE}/hdf5 --enable-parallel --enable-shared && \
         make && \
         make install && \
+        CC="mpicc" HDF5_MPI="ON"  pip install --no-binary=h5py h5py && \
         echo DEBUG: hdf5 built successfully && popd && return 0 || \
             echo DEBUG: failed to build hdf5 && popd && return 1
 }
