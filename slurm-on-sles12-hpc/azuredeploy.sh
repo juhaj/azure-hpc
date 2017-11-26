@@ -450,7 +450,7 @@ setup_hpc_software()
         install_petsc || return 3 && \
                 echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
                 export PETSC_DIR=/software/petsc && \
-                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --upgrade pip && \
+                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed --exists-action=w --quiet --upgrade pip && \
                 CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets matplotlib
     else
         # TODO!!! we should rsync /software from master but need to setup pubkey auth first
