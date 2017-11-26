@@ -372,7 +372,7 @@ install_petsc()
                     --with-elemental=0 \
                     --with-netcdf=0 \
                     --with-triangle=0 \
-                    --with-numpy=1 \
+                    --with-numpy=0 \
                     --with-hwloc=1 \
                     --with-parmetis=0 \
                     --with-metis=0 \
