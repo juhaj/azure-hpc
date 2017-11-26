@@ -340,7 +340,6 @@ install_hdf5()
         ./configure --prefix=${SOFTWARE_INSTALL_TREE}/hdf5 --enable-parallel --enable-shared && \
         make && \
         make install && \
-        CC="mpicc" HDF5_MPI="ON" HDF5_DIR=/software/hdf5 pip3 install --no-binary=h5py h5py && \
         echo DEBUG: hdf5 built successfully && popd && return 0 || \
             echo DEBUG: failed to build hdf5 && popd && return 1
 }
@@ -450,6 +449,7 @@ setup_hpc_software()
         install_petsc || return 3 && \
                 echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
                 export PETSC_DIR=/software/petsc && \
+                CC="mpicc" HDF5_MPI="ON" HDF5_DIR=/software/hdf5 pip3 install --no-binary=h5py h5py && \
                 CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed --exists-action=w --quiet --upgrade pip && \
                 CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets matplotlib
     else

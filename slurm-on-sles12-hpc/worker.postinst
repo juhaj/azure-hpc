@@ -21,7 +21,7 @@ done
 # install jupyter etc
 for ((i=$S;$i<$E;i++))
 do
-    ssh root@worker$i sh -c 'CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --exists-action=w --quiet --ignore-installed --upgrade pip && CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --exists-action=w --quiet --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets matplotlib' &
+    ssh root@worker$i sh -c 'CC="mpicc" HDF5_MPI="ON" HDF5_DIR=${HDF5_HOME} pip3 install --no-binary=h5py h5py && CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --exists-action=w --quiet --ignore-installed --upgrade pip && CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --exists-action=w --quiet --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets matplotlib' &
 done
 
 wait
