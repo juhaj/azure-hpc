@@ -421,7 +421,7 @@ install_workarounds_for_broken_stuff() {
 # setup software needed for the Research Programming course
 setup_hpc_software()
 {
-    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-matplotlib python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv rsync schedtool swig
+    zypper install --no-confirm --force --force-resolution cmake emacs gcc7 gcc7-c++ gcc7-fortran make git hwloc hwloc-devel libopenblas_openmp-devel libopenblas_openmp0 libopenblaso0 openblas-devel python3-Cython python3-devel python3-numpy python3-numpy-devel python3-pip python3-scipy python3-virtualenv rsync schedtool swig
     # unfortunately not everything works out of the box on SLES12SP3
     install_workarounds_for_broken_stuff
     # we also need passgen when we create users, so add that
@@ -450,7 +450,8 @@ setup_hpc_software()
         install_petsc || return 3 && \
                 echo "export PETSC_DIR=/software/petsc" >> /etc/profile.d/hpc.sh && \
                 export PETSC_DIR=/software/petsc && \
-                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets
+                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --upgrade pip && \
+                CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 pip3 install --ignore-installed ipyparallel jupyter notedown bash_kernel nbextensions ipywidgets matplotlib
     else
         # TODO!!! we should rsync /software from master but need to setup pubkey auth first
         # TODO!!! for now do that as a postinst step
